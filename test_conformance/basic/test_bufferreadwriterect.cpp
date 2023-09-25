@@ -21,6 +21,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#include <cinttypes>
+
 #include "procs.h"
 
 #define CL_EXIT_ERROR(cmd,format,...)                \
@@ -355,7 +357,7 @@ test_bufferreadwriterect(cl_device_id device, cl_context context, cl_command_que
     // Compute a maximum buffer size based on the number of test images and the device maximum.
     cl_ulong max_mem_alloc_size = 0;
     CL_EXIT_ERROR(clGetDeviceInfo(device, CL_DEVICE_MAX_MEM_ALLOC_SIZE, sizeof(cl_ulong), &max_mem_alloc_size, NULL),"Could not get device info");
-    log_info("CL_DEVICE_MAX_MEM_ALLOC_SIZE = %llu bytes.\n", max_mem_alloc_size);
+    log_info("CL_DEVICE_MAX_MEM_ALLOC_SIZE = %" PRIu64 " bytes.\n", max_mem_alloc_size);
 
     // Confirm that the maximum allocation size is not zero.
     if (max_mem_alloc_size == 0) {
@@ -392,7 +394,7 @@ test_bufferreadwriterect(cl_device_id device, cl_context context, cl_command_que
 
         // Check to see if adequately sized buffers were found.
         if (tries >= max_tries) {
-            log_error("Error: Could not find random buffer sized less than %llu bytes in %lu tries.\n",
+            log_error("Error: Could not find random buffer sized less than %" PRIu64 " bytes in %lu tries.\n",
                       max_mem_alloc_size, max_tries);
             return -1;
         }

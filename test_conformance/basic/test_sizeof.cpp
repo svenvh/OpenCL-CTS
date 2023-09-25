@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cinttypes>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "procs.h"
@@ -162,12 +163,12 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
             return err;
         if( test != scalar_table[i].size )
         {
-            log_error( "\nFAILED: Type %s has size %lld, but expected size %lld!\n", scalar_table[i].name, test, scalar_table[i].size );
+            log_error( "\nFAILED: Type %s has size %" PRId64 ", but expected size %" PRId64 "!\n", scalar_table[i].name, test, scalar_table[i].size );
             return -1;
         }
         if( test != scalar_table[i].cl_size )
         {
-            log_error( "\nFAILED: Type %s has size %lld, but cl_ size is %lld!\n", scalar_table[i].name, test, scalar_table[i].cl_size );
+            log_error( "\nFAILED: Type %s has size %" PRId64 ", but cl_ size is %" PRId64 "!\n", scalar_table[i].name, test, scalar_table[i].cl_size );
             return -2;
         }
         log_info( "%16s", scalar_table[i].name );
@@ -197,12 +198,12 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
                 return err;
             if( test != j * vector_table[i].size )
             {
-                log_error( "\nFAILED: Type %s has size %lld, but expected size %lld!\n", name, test, j * vector_table[i].size );
+                log_error( "\nFAILED: Type %s has size %" PRId64 ", but expected size %lu!\n", name, test, j * vector_table[i].size );
                 return -1;
             }
             if( test != j * vector_table[i].cl_size )
             {
-                log_error( "\nFAILED: Type %s has size %lld, but cl_ size is %lld!\n", name, test, j * vector_table[i].cl_size );
+                log_error( "\nFAILED: Type %s has size %" PRId64 ", but cl_ size is %lu!\n", name, test, j * vector_table[i].cl_size );
                 return -2;
             }
             log_info( "%16s", name );
@@ -219,7 +220,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
             return err;
         if( test != ptr_size )
         {
-            log_error( "\nFAILED: Type %s has size %lld, but expected size %u!\n", ptr_table[i], test, ptr_size );
+            log_error( "\nFAILED: Type %s has size %" PRId64 ", but expected size %u!\n", ptr_table[i], test, ptr_size );
             return -1;
         }
         log_info( "%16s", ptr_table[i] );
@@ -232,12 +233,12 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
         return err;
     if( test < ptr_size )
     {
-        log_error( "\nFAILED: intptr_t has size %lld, but must be at least %u!\n", test, ptr_size );
+        log_error( "\nFAILED: intptr_t has size %" PRId64 ", but must be at least %u!\n", test, ptr_size );
         return -1;
     }
     if( ! IsPowerOfTwo( test ) )
     {
-        log_error( "\nFAILED: sizeof(intptr_t) is %lld, but must be a power of two!\n", test );
+        log_error( "\nFAILED: sizeof(intptr_t) is %" PRId64 ", but must be a power of two!\n", test );
         return -2;
     }
     log_info( "%16s", "intptr_t" );
@@ -249,12 +250,12 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
         return err;
     if( test < ptr_size )
     {
-        log_error( "\nFAILED: uintptr_t has size %lld, but must be at least %u!\n", test, ptr_size );
+        log_error( "\nFAILED: uintptr_t has size %" PRId64 ", but must be at least %u!\n", test, ptr_size );
         return -1;
     }
     if( ! IsPowerOfTwo( test ) )
     {
-        log_error( "\nFAILED: sizeof(uintptr_t) is %lld, but must be a power of two!\n", test );
+        log_error( "\nFAILED: sizeof(uintptr_t) is %" PRId64 ", but must be a power of two!\n", test );
         return -2;
     }
     log_info( "%16s\n", "uintptr_t" );
@@ -290,7 +291,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
             return err;
         if( ! IsPowerOfTwo( test ) )
         {
-            log_error( "\nFAILED: Type %s has size %lld, which is not a power of two (section 6.1.5)!\n", other_types[i], test );
+            log_error( "\nFAILED: Type %s has size %" PRId64 ", which is not a power of two (section 6.1.5)!\n", other_types[i], test );
             return -1;
         }
         log_info( "%16s", other_types[i] );
@@ -308,7 +309,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
             return err;
         if( test != 8 )
         {
-            log_error( "\nFAILED: double has size %lld, but must be 8!\n", test );
+            log_error( "\nFAILED: double has size %" PRId64 ", but must be 8!\n", test );
             return -1;
         }
         log_info( "%16s", "double" );
@@ -325,7 +326,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
                 return err;
             if( test != 8*j )
             {
-                log_error( "\nFAILED: %s has size %lld, but must be %ld!\n", name, test, 8 * j);
+                log_error( "\nFAILED: %s has size %" PRId64 ", but must be %ld!\n", name, test, 8 * j);
                 return -1;
             }
             log_info( "%16s", name );
@@ -343,7 +344,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
             return err;
         if( test != 2 )
         {
-            log_error( "\nFAILED: half has size %lld, but must be 2!\n", test );
+            log_error( "\nFAILED: half has size %" PRId64 ", but must be 2!\n", test );
             return -1;
         }
         log_info( "%16s", "half" );
@@ -360,7 +361,7 @@ int test_sizeof(cl_device_id device, cl_context context, cl_command_queue queue,
                 return err;
             if( test != 2*j )
             {
-                log_error( "\nFAILED: %s has size %lld, but must be %ld!\n", name, test, 2 * j);
+                log_error( "\nFAILED: %s has size %" PRId64 ", but must be %ld!\n", name, test, 2 * j);
                 return -1;
             }
             log_info( "%16s", name );
