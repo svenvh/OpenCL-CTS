@@ -154,8 +154,8 @@
         "": {
             "clamp": "pass",
             "clamp_scalar_bounds": "pass",
-            "mix": "fail",
-            "mixf": "fail"
+            "mix": "pass",
+            "mixf": "pass"
         }
     },
     "test_computeinfo": {
