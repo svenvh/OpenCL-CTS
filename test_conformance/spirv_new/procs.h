@@ -25,6 +25,7 @@
 #include "harness/testHarness.h"
 #include "harness/parseParameters.h"
 
+#include <string>
 #include <vector>
 
 #define SPIRV_CHECK_ERROR(err, fmt, ...)                                       \
@@ -41,4 +42,9 @@ int get_unbuilt_program_with_il(clProgramWrapper &prog,
                                 const cl_context context, const char *fileName);
 int get_program_with_il(clProgramWrapper &prog, const cl_device_id deviceID,
                         const cl_context context, const char *fileName);
+int get_program_with_generated_il(clProgramWrapper &prog,
+                                  const cl_device_id deviceID,
+                                  const cl_context context,
+                                  const char *prog_name,
+                                  const std::string &spirv_text);
 std::vector<unsigned char> readSPIRV(const char *file_name);
