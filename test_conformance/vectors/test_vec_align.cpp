@@ -421,16 +421,6 @@ cl_int test_vec_thread(cl_uint job_id, cl_uint thread_id, void* userInfo)
         typeMultiplePostSize, info->supports_fp64, info->supports_fp16);
 }
 
-bool supports_fp64(cl_device_id device)
-{
-    return is_extension_available(device, "cl_khr_fp64");
-}
-
-bool supports_fp16(cl_device_id device)
-{
-    return is_extension_available(device, "cl_khr_fp16");
-}
-
 // there hsould be a packed version of this?
 REGISTER_TEST(vec_align_array)
 {
@@ -440,9 +430,9 @@ REGISTER_TEST(vec_align_array)
     log_info("Testing global\n");
     doReplace(tmp, (size_t)2048, patterns[0], ".SRC_SCOPE.", "__global",
               ".DST_SCOPE.", "__global"); //
-    result = test_vec_internal(device, context, queue, tmp,
-                               "test_vec_align_array", BUFFER_SIZE, 0, 0, 0, 0,
-                               supports_fp64(device), supports_fp16(device));
+    result = test_vec_internal(
+        device, context, queue, tmp, "test_vec_align_array", BUFFER_SIZE, 0, 0,
+        0, 0, device_supports_double(device), device_supports_half(device));
     return result;
 }
 
@@ -461,8 +451,8 @@ REGISTER_TEST(vec_align_struct)
                                512,
                                false,
                                tmp,
-                               supports_fp64(device),
-                               supports_fp16(device) };
+                               device_supports_double(device),
+                               device_supports_half(device) };
     cl_int result = ThreadPool_Do(test_vec_thread, ARR_SIZE * ARR_SIZE, &info);
     if (result != CL_SUCCESS)
     {
@@ -491,8 +481,8 @@ REGISTER_TEST(vec_align_packed_struct)
                                512,
                                true,
                                tmp,
-                               supports_fp64(device),
-                               supports_fp16(device) };
+                               device_supports_double(device),
+                               device_supports_half(device) };
     cl_int result = ThreadPool_Do(test_vec_thread, ARR_SIZE * ARR_SIZE, &info);
     if (result != CL_SUCCESS)
     {
@@ -522,8 +512,8 @@ REGISTER_TEST(vec_align_struct_arr)
                                BUFFER_SIZE,
                                false,
                                tmp,
-                               supports_fp64(device),
-                               supports_fp16(device) };
+                               device_supports_double(device),
+                               device_supports_half(device) };
     return ThreadPool_Do(test_vec_thread, ARR_SIZE * ARR_SIZE, &info);
 }
 
@@ -541,7 +531,7 @@ REGISTER_TEST(vec_align_packed_struct_arr)
                                BUFFER_SIZE,
                                true,
                                tmp,
-                               supports_fp64(device),
-                               supports_fp16(device) };
+                               device_supports_double(device),
+                               device_supports_half(device) };
     return ThreadPool_Do(test_vec_thread, ARR_SIZE * ARR_SIZE, &info);
 }
