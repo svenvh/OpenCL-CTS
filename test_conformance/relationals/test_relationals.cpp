@@ -19,8 +19,6 @@
 #include "harness/testHarness.h"
 
 #include <array>
-#include <cassert>
-#include <cstdlib>
 
 // clang-format off
 
@@ -91,8 +89,8 @@ static void write_any_all_patterns_typed(T *data, unsigned int vecSize,
     }
 }
 
-// Write directed patterns to the input buffer.
-static void write_any_all_patterns(ExplicitType elementType,
+// Write directed patterns to the input buffer. Return true on success.
+static bool write_any_all_patterns(ExplicitType elementType,
                                    unsigned int vecSize, void *inData)
 {
     const unsigned int vectorStride = g_vector_aligns[vecSize];
@@ -116,10 +114,13 @@ static void write_any_all_patterns(ExplicitType elementType,
                                          vectorStride);
             break;
         default:
-            assert(false
-                   && "Unsupported element type for any/all input patterns");
-            abort();
+            log_error(
+                "Unsupported element type %s for any/all input patterns\n",
+                get_explicit_type_name(elementType));
+            return false;
     }
+
+    return true;
 }
 
 int test_any_all_kernel(cl_context context, cl_command_queue queue,
@@ -183,7 +184,7 @@ int test_any_all_kernel(cl_context context, cl_command_queue queue,
     const size_t elementSize = get_explicit_type_size(vecType);
     // Start with directed patterns to guarantee coverage of key MSB
     // combinations that random data is unlikely to produce.
-    write_any_all_patterns(vecType, vecSize, inDataA);
+    if (!write_any_all_patterns(vecType, vecSize, inDataA)) return -1;
     // Fill the remainder of the input buffer with random data.
     generate_random_data(vecType, randomElementCount, d,
                          (char *)inDataA + directedElementCount * elementSize);
